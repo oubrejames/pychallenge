@@ -26,10 +26,20 @@ class Generate:
         self.maze[random_r][random_c] = 0
         print(self.maze)
         wall_list = self.neighbors(cell_b)
+        ct = 0
         while len(wall_list):
+            ct+=1
+            if ct > 50: 
+                break
+            print()
+            print("WALL LIST")
             print_coord_list(wall_list)
+            print("WALL LIST")
             wall_c = random.choice(wall_list)
             wall_c.p()
+            print("CELL B")
+            cell_b = self.free_neighbors(wall_c)[0]
+            cell_b.p()
             #find the cell A that wall C divides
             if cell_b.r == wall_c.r: 
                 print("Same row")
@@ -41,7 +51,12 @@ class Generate:
                     print("Increase col")
                     new_c = wall_c.c + 1
                     print(new_c)
-                cell_a = Coord(cell_b.r, new_c)
+                if new_c < self.n and new_c >= 0: 
+                    cell_a = Coord(cell_b.r, new_c)
+                else: 
+                    wall_list.remove(wall_c)
+                    print("OUT OF RANGE")
+                    continue
             elif cell_b.c == wall_c.c:
                 print("Same col")
                 if cell_b.r > wall_c.r: 
@@ -52,8 +67,14 @@ class Generate:
                     print("Increase row")
                     new_r = wall_c.r + 1
                     print(new_r)
-                cell_a = Coord(new_r, cell_b.c)
+                if new_r < self.m and new_r >= 0: 
+                    cell_a = Coord(new_r, cell_b.c)
+                else: 
+                    wall_list.remove(wall_c)
+                    print("OUT OF RANGE")
+                    continue
             # IF cell_A is a wall (code 1)
+            #SHOULD ALWAYS BE THE CASE: 
             if (self.maze[cell_a.r][cell_a.c]):
                 # Make cell D whichever one is the wall
                 cell_d = cell_a
@@ -61,22 +82,11 @@ class Generate:
                 self.maze[wall_c.r][wall_c.c] = 0
                 #Free Cell D
                 self.maze[cell_d.r][cell_d.c] = 0
-                #Not sure about this one...
-                cell_b = cell_d
                 wall_list += self.neighbors(cell_d)
-            elif (self.maze[cell_b.r][cell_b.c]):
-                # Make cell D whichever one is the wall
-                cell_d = cell_b
-                #Free Cell C
-                self.maze[wall_c.r][wall_c.c] = 0
-                #Free Cell D
-                self.maze[cell_d.r][cell_d.c] = 0
-                #Not sure about this one...
-                cell_b = cell_d
-                wall_list += self.neighbors(cell_d)
+            else:
+                print("A is already empty!!!!!")
             wall_list.remove(wall_c)
             print(self.maze)
-            #exit()
 
         #self.start = (,)
         #self.end = (,)
@@ -101,9 +111,28 @@ class Generate:
             if self.maze[nb.r][nb.c]:
                 lst.append(nb)
         return lst
+    def free_neighbors(self, co):
+        lst = []
+        if co.r < self.m-1: 
+            nb = Coord(co.r+1, co.c)
+            if not self.maze[nb.r][nb.c]:
+                lst.append(nb)
+        if co.r > 0: 
+            nb = Coord(co.r-1, co.c)
+            if not self.maze[nb.r][nb.c]:
+                lst.append(nb)
+        if co.c < self.n-1: 
+            nb = Coord(co.r, co.c+1)
+            if not self.maze[nb.r][nb.c]:
+                lst.append(nb)
+        if co.c > 0: 
+            nb = Coord(co.r, co.c-1)
+            if not self.maze[nb.r][nb.c]:
+                lst.append(nb)
+        return lst
 
         
 
 
 
-Generate(3,8)
+Generate(8,8)

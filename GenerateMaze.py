@@ -63,6 +63,7 @@ class Generate:
                 self.maze[cell_d.r][cell_d.c] = 0
                 #Not sure about this one...
                 cell_b = cell_d
+                wall_list += self.neighbors(cell_d)
             elif (self.maze[cell_b.r][cell_b.c]):
                 # Make cell D whichever one is the wall
                 cell_d = cell_b
@@ -72,29 +73,33 @@ class Generate:
                 self.maze[cell_d.r][cell_d.c] = 0
                 #Not sure about this one...
                 cell_b = cell_d
+                wall_list += self.neighbors(cell_d)
             wall_list.remove(wall_c)
             print(self.maze)
             #exit()
 
-
-        #for r in range(0,m):
-        #    for c in range(0,n):
-        #        print(self.maze[r][c])
-        #        #random.randrange(x,y)
-
-        
         #self.start = (,)
         #self.end = (,)
+
+    #Now this only returns neighbors that are walls. 
     def neighbors(self, co):
         lst = []
         if co.r < self.m-1: 
-            lst.append(Coord(co.r+1, co.c))
+            nb = Coord(co.r+1, co.c)
+            if self.maze[nb.r][nb.c]:
+                lst.append(nb)
         if co.r > 0: 
-            lst.append(Coord(co.r-1, co.c))
+            nb = Coord(co.r-1, co.c)
+            if self.maze[nb.r][nb.c]:
+                lst.append(nb)
         if co.c < self.n-1: 
-            lst.append(Coord(co.r, co.c+1))
+            nb = Coord(co.r, co.c+1)
+            if self.maze[nb.r][nb.c]:
+                lst.append(nb)
         if co.c > 0: 
-            lst.append(Coord(co.r, co.c-1))
+            nb = Coord(co.r, co.c-1)
+            if self.maze[nb.r][nb.c]:
+                lst.append(nb)
         return lst
 
         

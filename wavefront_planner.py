@@ -5,10 +5,10 @@ from GenerateMaze import *
 class makePath:
     def __init__(self):
         self.maze = Generate(10,10)
+        self.maze.load()
         self.cnt = 1
         self.path_map = np.full(self.maze.maze.shape, 999)
         self.stage_list = []
-        self.savior = True
 
     def make_map(self):
         print('Start ')
@@ -17,14 +17,23 @@ class makePath:
         self.maze.end.p()
         
         self.path_map[self.maze.start.r][self.maze.start.c] = 0
+        self.path_map[self.maze.end.r][self.maze.end.c] = 222
 
         self.loop_squares()
         print(self.path_map)
+        print_coord_list(self.stage_list)
         #self.check_surround()
+
+    def are_we_there_yet(self, point):
+        if point.r == self.maze.end.r and point.c == self.maze.end.c:
+            return True
+        else: 
+            return False
 
     def check_surround(self, point):
         # Check bottom
         # If point is not on bottom
+        self.stage_list.clear()
         if point.r < self.maze.m-1:
             below_contents = self.maze.maze[point.r+1][point.c]
             
@@ -33,15 +42,6 @@ class makePath:
             elif below_contents == 0 and self.path_map[point.r+1][point.c] == 999: # If free, add label
                 self.path_map[point.r+1][point.c] = self.cnt
                 self.stage_list.append(Coord(point.r+1,point.c))
-
-                #print("Coord: ", point.r+1, "Maze end ", self.maze.end.r)
-
-                #if Coord(point.r+1,point.c) == self.maze.end:
-                if point.r== self.maze.end.r and point.c == self.maze.end.c:
-                    print("HERE")
-                    self.savior = False
-
-
                 print("Added ", self.cnt, " to stage list for below")
 
         # Check above
@@ -53,16 +53,6 @@ class makePath:
             elif above_contents == 0 and self.path_map[point.r-1][point.c] == 999: # If free, add label
                 self.path_map[point.r-1][point.c] = self.cnt
                 self.stage_list.append(Coord(point.r-1,point.c))
-
-
-                
-
-                #if Coord(point.r-1,point.c) == self.maze.end:
-                if point.r == self.maze.end.r and point.c == self.maze.end.c:
-
-                    print("HERE 2")
-                    self.savior = False
-
                 print("Added ", self.cnt, " to stage list for above")
 
         # Check Right
@@ -73,12 +63,6 @@ class makePath:
             elif right_contents == 0 and self.path_map[point.r][point.c+1] == 999: # If free, add label
                 self.path_map[point.r][point.c+1] = self.cnt
                 self.stage_list.append(Coord(point.r,point.c+1))
-
-                #if Coord(point.r,point.c+1) == self.maze.end:
-                if point.r == self.maze.end.r and point.c == self.maze.end.c:
-                    print("HERE3")
-                    self.savior = False
-
                 print("Added ", self.cnt, " to stage list for right")
 
         # Check left
@@ -86,41 +70,29 @@ class makePath:
             left_contents = self.maze.maze[[point.r],[point.c-1]]
             if left_contents == 1: # Is there obstacle
                 pass
-            elif left_contents == 0 and self.path_map[point.r][point.c] == 999: # If free, add label
+            elif left_contents == 0 and self.path_map[point.r][point.c-1] == 999: # If free, add label
                 self.path_map[point.r][point.c-1] = self.cnt
                 self.stage_list.append(Coord(point.r,point.c-1))
-
-                if point.r == self.maze.end.r and point.c-1 == self.maze.c:
-                    print("HERE4")
-                    self.savior = False
                 print("Added ", self.cnt, " to stage list for left")
     
     def loop_squares(self):
         
         self.check_surround(self.maze.start)
-        tmp_stage = self.stage_list
+
+        print("FHFJHFHFHF")
         print_coord_list(self.stage_list)
+        flag = True
 
-        i=0
-        print("len ", len(self.stage_list))
-        while self.savior:
-            self.cnt += 1
-            for i in self.stage_list:
+        while not flag:
+            tmp_stage = self.stage_list
+            for i in tmp_stage:
                 self.check_surround(i)
-                #print_coord_list(i)
-            #i+=1
+                flag = are_we_there_yet(i)
+                #i.p()
+                
+            self.cnt += 1
 
-
-
-
-        # for i in self.stage_list:
-        #     self.cnt += 1
-        #     self.check_surround(i)
-        
-
-
-
-
+    
 
 
 
@@ -129,6 +101,7 @@ def main():
     """Main"""
     temp = makePath()
     temp.make_map()
+    
 
 if __name__ == "__main__":
     main()

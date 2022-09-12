@@ -22,17 +22,12 @@ class Generate:
         random_r = random.randrange(0,m)
         random_c = random.randrange(0,n)
         cell_b = Coord(random_r, random_c)
-        #cell_b.p()
         self.maze[random_r][random_c] = 0
-        #print(self.maze)
         wall_list = self.neighbors(cell_b)
         empty_cells = [cell_b]
         while len(wall_list):
             wall_c = random.choice(wall_list)
-            #wall_c.p()
-            #print("CELL B")
             cell_b = self.free_neighbors(wall_c)[0]
-            #cell_b.p()
             #find the cell A that wall C divides
             if cell_b.r == wall_c.r: 
                 #print("Same row")
@@ -83,17 +78,11 @@ class Generate:
                 #print("A is already empty!!!!!")
                 pass
             wall_list.remove(wall_c)
-            #print(self.maze)
-            #print()
 
         self.start = random.choice(empty_cells)
         self.end = random.choice(empty_cells)
         while self.end == self.start: 
             self.end = random.choice(empty_cells)
-        print(f"Size: {self.m}x{self.n}")
-        print(f"Start: ({self.start.r},{self.start.c})")
-        print(f"End: ({self.end.r},{self.end.c})")
-        print("MAZE:")
         self.print_maze()
 
     #Now this only returns neighbors that are walls. 
@@ -116,6 +105,7 @@ class Generate:
             if self.maze[nb.r][nb.c]:
                 lst.append(nb)
         return lst
+
     def free_neighbors(self, co):
         lst = []
         if co.r < self.m-1: 
@@ -135,7 +125,12 @@ class Generate:
             if not self.maze[nb.r][nb.c]:
                 lst.append(nb)
         return lst
+
     def print_maze(self):
+        print(f"Size: {self.m}x{self.n}")
+        print(f"Start: ({self.start.r},{self.start.c})")
+        print(f"End: ({self.end.r},{self.end.c})")
+        print("MAZE:")
         for c in range(0, self.n):
                 print("-",end='')
         print('--') 
@@ -150,6 +145,7 @@ class Generate:
         for c in range(0, self.n):
             print("-",end='')
         print('--')
+
     def save(self):
         f = open('maze.txt', 'w')
         f.write(str(self.m)+'\n')
@@ -159,6 +155,7 @@ class Generate:
         for r in range(0, self.m):
             f.write(str(self.maze[r]).strip('[]')+'\n')
         f.close()
+
     def load(self):
         f = open('maze.txt', 'r')
         lines = f.readlines()
@@ -176,3 +173,14 @@ class Generate:
         self.maze = np.array(final)
         self.print_maze()
         f.close()
+        
+    def change_start(self, r, c):
+        if self.maze[r][c]:
+            print("This spot is a wall. Choose something else.")
+        else: 
+            self.start = Coord(r, c)
+    def change_end(self, r, c):
+        if self.maze[r][c]:
+            print("This spot is a wall. Choose something else.")
+        else: 
+            self.end = Coord(r, c)

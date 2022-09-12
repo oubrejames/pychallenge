@@ -51,3 +51,7 @@ def give_rand_maze():
     num = random.randint(0,7)
     return mazes[num], starts[num], ends[num]
 
+tmaze, tstart, tend = give_rand_maze()
+print(tmaze)
+print(tstart)
+print(tend)

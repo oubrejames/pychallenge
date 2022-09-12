@@ -22,10 +22,11 @@ class Generate:
         random_r = random.randrange(0,m)
         random_c = random.randrange(0,n)
         cell_b = Coord(random_r, random_c)
-        cell_b.p()
+        #cell_b.p()
         self.maze[random_r][random_c] = 0
-        print(self.maze)
+        #print(self.maze)
         wall_list = self.neighbors(cell_b)
+        empty_cells = [cell_b]
         while len(wall_list):
             wall_c = random.choice(wall_list)
             #wall_c.p()
@@ -72,18 +73,28 @@ class Generate:
                 cell_d = cell_a
                 #Free Cell C
                 self.maze[wall_c.r][wall_c.c] = 0
+                empty_cells.append(wall_c)
                 #Free Cell D
                 self.maze[cell_d.r][cell_d.c] = 0
+                empty_cells.append(cell_d)
+
                 wall_list += self.neighbors(cell_d)
             else:
                 #print("A is already empty!!!!!")
                 pass
             wall_list.remove(wall_c)
-            print(self.maze)
-            print()
+            #print(self.maze)
+            #print()
 
-        self.start = Coord(random.randrange(0,m),random.randrange(0,n))
-        self.end = Coord(random.randrange(0,m),random.randrange(0,n))
+        self.start = random.choice(empty_cells)
+        self.end = random.choice(empty_cells)
+        while self.end == self.start: 
+            self.end = random.choice(empty_cells)
+        print(f"Size: {self.m}x{self.n}")
+        print(f"Start: ({self.start.r},{self.start.c})")
+        print(f"End: ({self.end.r},{self.end.c})")
+        print("MAZE:")
+        print(self.maze)
 
     #Now this only returns neighbors that are walls. 
     def neighbors(self, co):
@@ -126,3 +137,4 @@ class Generate:
         return lst
 
         
+Generate(8,8)

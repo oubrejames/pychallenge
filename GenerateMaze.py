@@ -26,52 +26,44 @@ class Generate:
         self.maze[random_r][random_c] = 0
         print(self.maze)
         wall_list = self.neighbors(cell_b)
-        ct = 0
         while len(wall_list):
-            ct+=1
-            if ct > 50: 
-                break
-            print()
-            print("WALL LIST")
-            print_coord_list(wall_list)
-            print("WALL LIST")
             wall_c = random.choice(wall_list)
-            wall_c.p()
-            print("CELL B")
+            #wall_c.p()
+            #print("CELL B")
             cell_b = self.free_neighbors(wall_c)[0]
-            cell_b.p()
+            #cell_b.p()
             #find the cell A that wall C divides
             if cell_b.r == wall_c.r: 
-                print("Same row")
+                #print("Same row")
                 if cell_b.c > wall_c.c: 
-                    print("Decrease col")
+                    #print("Decrease col")
                     new_c = wall_c.c - 1
-                    print(new_c)
+                    #print(new_c)
                 else: 
-                    print("Increase col")
+                    #print("Increase col")
                     new_c = wall_c.c + 1
-                    print(new_c)
+                    #print(new_c)
                 if new_c < self.n and new_c >= 0: 
                     cell_a = Coord(cell_b.r, new_c)
                 else: 
                     wall_list.remove(wall_c)
-                    print("OUT OF RANGE")
+                    #print("OUT OF RANGE")
                     continue
             elif cell_b.c == wall_c.c:
-                print("Same col")
+                #print("Same col")
                 if cell_b.r > wall_c.r: 
-                    print("Decrease row")
+                    #print("Decrease row")
                     new_r = wall_c.r - 1
-                    print(new_r)
+                    #print(new_r)
                 else: 
-                    print("Increase row")
+                    #print("Increase row")
                     new_r = wall_c.r + 1
-                    print(new_r)
+                    #print(new_r)
                 if new_r < self.m and new_r >= 0: 
                     cell_a = Coord(new_r, cell_b.c)
                 else: 
                     wall_list.remove(wall_c)
-                    print("OUT OF RANGE")
+                    #print("OUT OF RANGE")
                     continue
             # IF cell_A is a wall (code 1)
             #SHOULD ALWAYS BE THE CASE: 
@@ -84,12 +76,14 @@ class Generate:
                 self.maze[cell_d.r][cell_d.c] = 0
                 wall_list += self.neighbors(cell_d)
             else:
-                print("A is already empty!!!!!")
+                #print("A is already empty!!!!!")
+                pass
             wall_list.remove(wall_c)
             print(self.maze)
+            print()
 
-        #self.start = (,)
-        #self.end = (,)
+        self.start = Coord(random.randrange(0,m),random.randrange(0,n))
+        self.end = Coord(random.randrange(0,m),random.randrange(0,n))
 
     #Now this only returns neighbors that are walls. 
     def neighbors(self, co):
@@ -132,7 +126,3 @@ class Generate:
         return lst
 
         
-
-
-
-Generate(8,8)

@@ -94,7 +94,7 @@ class Generate:
         print(f"Start: ({self.start.r},{self.start.c})")
         print(f"End: ({self.end.r},{self.end.c})")
         print("MAZE:")
-        print(self.maze)
+        self.print_maze()
 
     #Now this only returns neighbors that are walls. 
     def neighbors(self, co):
@@ -135,5 +135,18 @@ class Generate:
             if not self.maze[nb.r][nb.c]:
                 lst.append(nb)
         return lst
-
-        
+    def print_maze(self):
+        for c in range(0, self.n):
+                print("-",end='')
+        print('--') 
+        for r in range(0, self.m):
+            print("|",end='')
+            for c in range(0, self.n):
+                if self.maze[r][c]:
+                    print("X",end='')
+                else: 
+                    print(" ",end='')
+            print("|")
+        for c in range(0, self.n):
+            print("-",end='')
+        print('--')

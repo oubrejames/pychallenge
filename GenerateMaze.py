@@ -156,5 +156,23 @@ class Generate:
         f.write(str(self.n)+'\n')
         f.write(str(self.start.r)+' '+str(self.start.c)+'\n')
         f.write(str(self.end.r)+' '+str(self.end.c)+'\n')
-        f.write(str(self.maze)+'\n')
+        for r in range(0, self.m):
+            f.write(str(self.maze[r]).strip('[]')+'\n')
+        f.close()
+    def load(self):
+        f = open('maze.txt', 'r')
+        lines = f.readlines()
+        self.m = int(lines[0])
+        self.n = int(lines[1])
+        spl_start = (lines[2]).split()
+        self.start = Coord(int(spl_start[0]), int(spl_start[1]))
+        spl_end = (lines[3]).split()
+        self.end = Coord(int(spl_end[0]), int(spl_start[1]))
+        nlines = len(lines)
+        final = []
+        for l in range(4, nlines):
+            lst = list(int(i) for i in lines[l].split())
+            final.append(lst)
+        self.maze = np.array(final)
+        self.print_maze()
         f.close()

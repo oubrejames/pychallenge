@@ -8,13 +8,25 @@ EAST = 2
 SOUTH = 3
 WEST = 4
 
+
+def convert(dir):
+    if dir == NORTH: 
+        print("NORTH")
+    elif dir == EAST: 
+        print("EAST")
+    elif dir == SOUTH: 
+        print("SOUTH")
+    elif dir == WEST: 
+        print("WEST")
+
+
 class Solve: 
     def __init__(self, m, n):
         self.mz = Generate(m, n)
         self.history = []
         self.current = self.mz.start
     
-    def move(self, co): 
+    def checkMove(self, co): 
         if co.c > 0: 
             if self.mz.maze[co.r][co.c-1] == 0:
                 return (NORTH, Coord(co.r, co.c-1)) 
@@ -29,6 +41,18 @@ class Solve:
                 return (WEST, Coord(co.r-1, co.c)) 
         else:
             return (0, Coord(-1, -1))
+    
+    def moveInDir(self, co, dir):
+        if dir == NORTH: 
+            return Coord(co.r, co.c-1)
+        elif dir == EAST: 
+            return Coord(co.r+1, co.c)
+        elif dir == SOUTH: 
+            return Coord(co.r, co.c+1)
+        elif dir == WEST: 
+            return Coord(co.r-1, co.c)
+        else: 
+            return Coord(-1, -1)
 
     def pop(self):
         # remove and return the most recent addition to the history
@@ -41,21 +65,26 @@ class Solve:
     
     
     def go(self): 
-        while (self.current.r != self.mz.end.r) and (self.current.c != self.mz.end.c): 
+        while not ((self.current.r == self.mz.end.r) and (self.current.c == self.mz.end.c)): 
             print("Current Location:", end='')
             self.current.p()
-            direction, co = self.move(self.current)
+            direction, co = self.checkMove(self.current)
             co.p()
-            print(direction)
+            convert(direction)
             if direction: 
                 print("We can proceed!")
                 # we can proceed in some direction
-                self.push((direction, co))
+                self.push((direction, self.current))
                 self.current = co
             else: 
                 print("NEEDD to backtrack")
                 # Need to backtrack!
                 last_direction, last_co = self.pop()
+                bad_move = self.moveInDir(last_co, last_direction)
+                # block off the bad move
+                self.mz.maze[bad_move.r][bad_move.c] = 2
+                self.current = last_co
+
 
 
         

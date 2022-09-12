@@ -150,3 +150,11 @@ class Generate:
         for c in range(0, self.n):
             print("-",end='')
         print('--')
+    def save(self):
+        f = open('maze.txt', 'w')
+        f.write(str(self.m)+'\n')
+        f.write(str(self.n)+'\n')
+        f.write(str(self.start.r)+' '+str(self.start.c)+'\n')
+        f.write(str(self.end.r)+' '+str(self.end.c)+'\n')
+        f.write(str(self.maze)+'\n')
+        f.close()

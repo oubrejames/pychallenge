@@ -2,6 +2,7 @@ import pygame, sys
 from pygame.locals import *
 import numpy as np
 import sys
+# import GenerateMaze
 
 # Start the game
 pygame.init()
@@ -54,6 +55,10 @@ game_map = [['2','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'
             ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
             ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
             ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','3']]
+
+# test = [list(map(int,x)) for x in game_map]
+# test = [[x + 1 for x in y] for y in test]
+# print(test)
 
 # Booleans
 running = True

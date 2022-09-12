@@ -137,4 +137,3 @@ class Generate:
         return lst
 
         
-Generate(8,8)

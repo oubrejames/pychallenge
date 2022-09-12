@@ -7,34 +7,36 @@ def find_path():
     path = []
     current_pos = [start[0], start[1]]
     path.append(current_pos[:])
-    #while (current_pos != goal):
 
 def check_surroundings(mze, current_point, pathmap, cnt):
 
     #Check below
-    below_sq = mze[[current_point[0]-1] [current_point[1]]]
-    if current_point[1] == 0: 
-        # If the current point is on the bottom row aka bottom square out of bounds
-        pass
-    elif below_sq == 0: 
-        # If below square is a 0 (obsticle) mark -1
-        pathmap[[below_sq[0]][below_sq[1]]] = -1
-    elif below_sq == 1:
-        # Add clear label (number)
-        pathmap[[below_sq[0]][below_sq[1]]] = cnt
+    # below_sq = mze[[current_point[0]-1] [current_point[1]]]
+    if current_point[1] != mze.shape[1]+1: 
+        # If the current point is not at the bottom
+        print("x ", current_point[0])
+        print('y ', current_point[1]+1)
+        below_sq = mze[[current_point[0]] [current_point[1]+1]]
+
+        if below_sq == 0: 
+            # If below square is a 0 (obsticle) mark -1
+            pathmap[[below_sq[0]][below_sq[1]]] = -1
+        elif below_sq == 1:
+            # Add clear label (number)
+            pathmap[[below_sq[0]][below_sq[1]]] = cnt
 
 
     #Check Above
-    above_sq = mze[[current_point[0]+1] [current_point[1]]]
-    if current_point[1] == mze.shape[1]:
+    
+    if current_point[1] != 0:
         # If the current point is on the top aka above square out of bounds
-        pass
-    elif above_sq == 0: 
-        # If below square is a 0 (obsticle) mark -1
-        pathmap[[above_sq[0]][above_sq[1]]] = -1
-    elif above_sq == 1:
-        # Add clear label (number)
-        pathmap[[above_sq[0]][above_sq[1]]] = cnt
+        above_sq = mze[[current_point[0]] [current_point[1]+1]]
+        if above_sq == 0: 
+            # If below square is a 0 (obsticle) mark -1
+            pathmap[[above_sq[0]][above_sq[1]]] = -1
+        elif above_sq == 1:
+            # Add clear label (number)
+            pathmap[[above_sq[0]][above_sq[1]]] = cnt
 
 
     #Check left
@@ -69,7 +71,8 @@ def make_map(mze, start, end):
 
     path_map = np.empty(mze.shape)
     path_map[start[0]][start[1]] = 0
-    check_surroundings(mze, current point, path_map), cnt
+    cnt = 0
+    check_surroundings(mze, start, path_map, cnt)
 
 
 

@@ -1,36 +1,92 @@
 from importlib.resources import path
-from input_gen import *
-
+from GenerateMaze import *
 """Implementing the wavefront planner algorithm"""
 
-def find_path():
-    path = []
-    current_pos = [start[0], start[1]]
-    path.append(current_pos[:])
+class makePath:
+    def __init__(self):
+        self.maze = Generate(10,10)
+        self.cnt = 1
+        self.path_map = np.full(self.maze.maze.shape, 999)
+        self.stage_list = []
 
-def check_surroundings(mze, current_point, pathmap, cnt):
+    def make_map(self):
+        print('Start ')
+        self.maze.start.p()
+        print('End ')
+        self.maze.end.p()
+        
+        self.path_map[self.maze.start.r][self.maze.start.c] = 0
 
-    # Check Below
+        self.loop_squares()
+        print(self.path_map)
+        #self.check_surround()
+
+    def check_surround(self, point):
+        # Check bottom
+        # If point is not on bottom
+        if point.r < self.maze.m-1:
+            below_contents = self.maze.maze[point.r+1][point.c]
+            
+            if below_contents == 1: # Is there obstacle
+                pass
+            elif below_contents == 0 and self.path_map[point.r+1][point.c] == 999: # If free, add label
+                self.path_map[point.r+1][point.c] = self.cnt
+                self.stage_list.append(Coord(point.r+1,point.c))
+                print("Added ", self.cnt, " to stage list for below")
+
+        # Check above
+        if point.r < 0:
+            above_contents = self.maze.maze[point.r-1][point.c]
+            
+            if above_contents == 1: # Is there obstacle
+                pass
+            elif above_contents == 0 and self.path_map[point.r-1][point.c] == 999: # If free, add label
+                self.path_map[point.r-1][point.c] = self.cnt
+                self.stage_list.append(Coord(point.r-1,point.c))
+                print("Added ", self.cnt, " to stage list for above")
+
+        # Check Right
+        if point.c < self.maze.n-1:
+            right_contents = self.maze.maze[point.r][point.c+1]
+            if right_contents == 1: # Is there obstacle
+                pass
+            elif right_contents == 0 and self.path_map[point.r][point.c+1] == 999: # If free, add label
+                self.path_map[point.r][point.c+1] = self.cnt
+                self.stage_list.append(Coord(point.r,point.c+1))
+                print("Added ", self.cnt, " to stage list for right")
+
+        # Check left
+        if point.c < 0:
+            left_contents = self.maze.maze[[point.r],[point.c-1]]
+            if left_contents == 1: # Is there obstacle
+                pass
+            elif left_contents == 0 and self.path_map[point.r][point.c-1] == 999: # If free, add label
+                self.path_map[point.r][point.c-1] = self.cnt
+                self.stage_list.append(Coord(point.r,point.c-1))
+                print("Added ", self.cnt, " to stage list for left")
     
+    def loop_squares(self):
+        
+        self.check_surround(self.maze.start)
+        tmp_stage = self.stage_list
+        print("ahahah")
+        print_coord_list(self.stage_list)
+        for i in self.stage_list:
+            self.cnt += 1
+            self.check_surround(i)
+        
 
 
-def make_map(mze, start, end):
-    print('Start point: ', start)
-    print('End point ', end)
-    #print(mze[start[0]][start[1]])
 
-    path_map = np.empty(mze.shape)
-    path_map[start[0]][start[1]] = 0
-    cnt = 0
-    check_surroundings(mze, start, path_map, cnt)
+
 
 
 
 
 def main():
     """Main"""
-    maze, start_point, end_point = give_rand_maze()
-    make_map(maze, start_point, end_point)
+    temp = makePath()
+    temp.make_map()
 
 if __name__ == "__main__":
     main()

@@ -24,12 +24,6 @@ class makePath:
         print_coord_list(self.stage_list)
         #self.check_surround()
 
-    def are_we_there_yet(self, point):
-        if point.r == self.maze.end.r and point.c == self.maze.end.c:
-            return True
-        else: 
-            return False
-
     def check_surround(self, point):
         # Check bottom
         # If point is not on bottom
@@ -39,7 +33,7 @@ class makePath:
             
             if below_contents == 1: # Is there obstacle
                 pass
-            elif below_contents == 0 and self.path_map[point.r+1][point.c] == 999: # If free, add label
+            if below_contents == 0 and self.path_map[point.r+1][point.c] == 999: # If free, add label
                 self.path_map[point.r+1][point.c] = self.cnt
                 self.stage_list.append(Coord(point.r+1,point.c))
                 print("Added ", self.cnt, " to stage list for below")
@@ -50,7 +44,7 @@ class makePath:
             
             if above_contents == 1: # Is there obstacle
                 pass
-            elif above_contents == 0 and self.path_map[point.r-1][point.c] == 999: # If free, add label
+            if above_contents == 0 and self.path_map[point.r-1][point.c] == 999: # If free, add label
                 self.path_map[point.r-1][point.c] = self.cnt
                 self.stage_list.append(Coord(point.r-1,point.c))
                 print("Added ", self.cnt, " to stage list for above")
@@ -60,7 +54,7 @@ class makePath:
             right_contents = self.maze.maze[point.r][point.c+1]
             if right_contents == 1: # Is there obstacle
                 pass
-            elif right_contents == 0 and self.path_map[point.r][point.c+1] == 999: # If free, add label
+            if right_contents == 0 and self.path_map[point.r][point.c+1] == 999: # If free, add label
                 self.path_map[point.r][point.c+1] = self.cnt
                 self.stage_list.append(Coord(point.r,point.c+1))
                 print("Added ", self.cnt, " to stage list for right")
@@ -70,26 +64,35 @@ class makePath:
             left_contents = self.maze.maze[[point.r],[point.c-1]]
             if left_contents == 1: # Is there obstacle
                 pass
-            elif left_contents == 0 and self.path_map[point.r][point.c-1] == 999: # If free, add label
+            if left_contents == 0 and self.path_map[point.r][point.c-1] == 999: # If free, add label
                 self.path_map[point.r][point.c-1] = self.cnt
                 self.stage_list.append(Coord(point.r,point.c-1))
                 print("Added ", self.cnt, " to stage list for left")
+
+    def are_we_there_yet(self, point):
+        flag = True
+        if point.r == self.maze.end.r and point.c == self.maze.end.c:
+            flag =  True
+        else: 
+            flag = False
+        return flag
     
     def loop_squares(self):
-        
+    
         self.check_surround(self.maze.start)
 
         print("FHFJHFHFHF")
         print_coord_list(self.stage_list)
-        flag = True
+        flag = False
 
         while not flag:
             tmp_stage = self.stage_list
             for i in tmp_stage:
                 self.check_surround(i)
-                flag = are_we_there_yet(i)
+                flag = self.are_we_there_yet(i)
+                print("TEST")
                 #i.p()
-                
+            #print('count ', self.cnt)
             self.cnt += 1
 
     

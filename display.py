@@ -4,6 +4,7 @@ from pygame.locals import *
 import numpy as np
 import sys
 from GenerateMaze import *
+from RecursiveBacktracking import *
 
 # Start the game
 pygame.init()
@@ -19,20 +20,24 @@ path_img = pygame.image.load("images/path_img.png")
 # Tile Map Properties
 M = 20
 N = 20
-START = 'Some Index'
-FINISH = 'Another Index'
 TILE_SZ =  tile_img.get_width() # Hard Coded, will edit to tile.get_width()
 
 # Generate Maze
 Maze = Generate(M,N)
 game_map = Maze.maze
-Maze.save()
-game_map = Maze.load()
-print("Game map ", game_map)
+# Maze.save()
+# game_map = Maze.load()
+# print("Game map ", game_map)
 game_map = game_map.tolist()
 
 # Get Solved Path Coordinates
 # TODO: add code for path coordinates casting to list
+Solver = Solve(Maze)
+path_coords = Solver.go()
+path_coords.pop()
+path_coords.pop(0)
+# print(path_coords)
+
 
 # Screen Properties 
 screen = pygame.display.set_mode((M * TILE_SZ,N * TILE_SZ), 0)
@@ -43,35 +48,9 @@ BkgdColor = (139, 200, 254)
 start_loc = [Maze.start.r, Maze.start.c]
 end_loc = [Maze.end.r, Maze.end.c]
 
-# game_map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#             [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 1, 0, 0, 0, 1, 0], 
-#             [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0],
-#             [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-#             [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1], 
-#             [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0], 
-#             [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0], 
-#             [1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0],
-#             [1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1],
-#             [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#             [1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1],
-#             [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0],
-#             [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1],
-#             [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0],
-#             [1, 0, 1, 1, 1, 0, 1, 0, 1, 3, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0],
-#             [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-#             [1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1],
-#             [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0],
-#             [1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1],
-#             [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0]]
-
-# path_coords =[[9,15],[8,15],[7,15],[7,14],[7,13],[7,12],[7,11],[7,10],
-            #   [7,9],[7,8],[7,7],[7,6],[7,5],[6,5],[5,5],[5,4],[5,3],
-            #   [6,3],[7,3],[8,3],[9,3],[10,3],[11,3],[12,3],[13,3],[13,2],[13,1]]
-
-
 # Add location of start and end into the game_map
-# game_map[start_loc[0]][start_loc[1]] = 2
-# game_map[end_loc[0]][end_loc[1]] = 3
+game_map[start_loc[0]][start_loc[1]] = 2
+game_map[end_loc[0]][end_loc[1]] = 3
 
 # Change game_map to a list of strings
 game_map = [list(map(str,x)) for x in game_map]
@@ -86,12 +65,8 @@ game_map = [list(map(str,x)) for x in game_map]
 # print(test)
 
 def MoveRobot(PathCoords):
-    x = PathCoords[1] # Get X and Y of Path
-    y = PathCoords[0]
-
-    # When I eventually fix the points
-    # x = path_coords[0] # Get X and Y of Path
-    # y = path_coords[1]
+    x = PathCoords[0] # Get X and Y of Path
+    y = PathCoords[1]
 
     game_map[x][y] = '5' # Update to path_img
 

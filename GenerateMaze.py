@@ -164,7 +164,7 @@ class Generate:
         spl_start = (lines[2]).split()
         self.start = Coord(int(spl_start[0]), int(spl_start[1]))
         spl_end = (lines[3]).split()
-        self.end = Coord(int(spl_end[0]), int(spl_start[1]))
+        self.end = Coord(int(spl_end[0]), int(spl_end[1]))
         nlines = len(lines)
         final = []
         for l in range(4, nlines):

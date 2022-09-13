@@ -21,32 +21,26 @@ def convert(dir):
 
 
 class Solve: 
-    def __init__(self, m, n):
-        self.mz = Generate(m, n)
-        self.mz.load()
+    def __init__(self, mz):
+        self.mz = mz
         self.history = []
         self.on_path = []
         self.current = self.mz.start
     
     def chooseDirection(self, co): 
-        print(self.mz.maze)
         if co.r > 0: 
-            print("case north?")
             if (self.mz.maze[co.r-1][co.c] == 0) and (co.r-1, co.c) not in self.on_path:
                 print("Allowed North")
                 return 1
         if co.c < self.mz.n - 1: 
-            print("case east?")
             if (self.mz.maze[co.r][co.c+1] == 0) and (co.r, co.c+1) not in self.on_path:
                 print("Allowed East")
                 return 2
         if co.r < self.mz.m - 1:
-            print("case south?")
             if (self.mz.maze[co.r+1][co.c] == 0) and (co.r+1, co.c) not in self.on_path:
                 print("Allowed South")
                 return 3
         if co.c > 0: 
-            print("case west?")
             if (self.mz.maze[co.r][co.c-1] == 0) and (co.r, co.c-1) not in self.on_path: 
                 print("Allowed West")
                 return 4
@@ -80,67 +74,46 @@ class Solve:
     
     def go(self): 
         while not ((self.current.r == self.mz.end.r) and (self.current.c == self.mz.end.c)): 
-            print("Current Location:", end='')
+            print("Current Location: ", end='')
             self.current.p()
-            print("End Location:", end='')
-            self.mz.end.p()
             if self.current.r == -1 or self.current.c == -1: 
                 print("SOMETHING WENT WRONG!!!")
                 exit()
+            current_tuple = (self.current.r, self.current.c)
+            if current_tuple not in self.on_path:
+                self.on_path.append(current_tuple)
             direction = self.chooseDirection(self.current)
-            print("Direction:")
-            convert(direction)
             if direction is None: 
                 print("why are u doing this the direction should never be none")
                 exit()
             elif direction!=0: 
-                print("We can proceed!")
                 # we can proceed in some direction
                 self.push((direction, self.current))
-                self.on_path.append((self.current.r, self.current.c))
-                print("ON PATH")
-                print(self.on_path)
                 self.current = self.moveInDir(self.current, direction)
-                print("New current direction:")
-                self.current.p()
             else: 
                 print("We need to backtrack")
-                exit()
                 # Need to backtrack!
                 if len(self.history): 
                     last_direction, last_co = self.pop()
                     bad_move = self.moveInDir(last_co, last_direction)
                     # block off the bad move
-                    print("Blocking off: ", end='')
+                    print("Blocking off + removing from path: ", end='')
                     bad_move.p()
                     self.mz.maze[bad_move.r][bad_move.c] = 2
-                    print("ON PATH before")
-                    print(self.on_path)
                     self.on_path.remove((bad_move.r, bad_move.c))
-                    print("ON PATH after")
-                    print(self.on_path)
                     self.current = last_co
                 else: 
                     print("IDK what happened but we can't solve")
                     exit()
-        print("SOLVED:D")
-        print("Start:")
+        print()
+        print("SOLVED :D")
+        print("Start: ", end='')
         self.mz.start.p()
-        print("End:")
+        print("End: ", end='')
         self.mz.end.p()
-        print("Path:")
+        print("Path:", end='')
+        self.on_path.append((self.mz.end.r, self.mz.end.c))
+        print(self.on_path)
+        self.mz.maze[self.mz.maze == 2] = 0
+        return self.on_path
 
-        for i in self.history:
-            convert(i[0])
-            i[1].p()
-            print()
-
-
-
-        
-
-
-
-
-s = Solve(10, 10)
-s.go()

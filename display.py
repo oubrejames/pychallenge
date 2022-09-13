@@ -5,6 +5,7 @@ import numpy as np
 import sys
 from GenerateMaze import *
 from RecursiveBacktracking import *
+from wavefront_planner import *
 
 # Start the game
 pygame.init()
@@ -32,8 +33,12 @@ game_map = game_map.tolist()
 
 # Get Solved Path Coordinates
 # TODO: add code for path coordinates casting to list
-Solver = Solve(Maze)
-path_coords = Solver.go()
+# Solver for RecursiveBacktracking
+Recursive_Solver = Solve(Maze)
+# path_coords = Recursive_Solver.go()
+
+Wavefront_Solver = makePath(Maze)
+path_coords = Wavefront_Solver.make_map()
 path_coords.pop()
 path_coords.pop(0)
 # print(path_coords)

@@ -3,9 +3,9 @@ from GenerateMaze import *
 """Implementing the wavefront planner algorithm"""
 
 class makePath:
-    def __init__(self):
-        self.maze = Generate(10,10)
-        self.maze.load()
+    def __init__(self, mz):
+        self.maze = mz
+        # self.maze.load()
         self.cnt = 1
         self.path_map = np.full(self.maze.maze.shape, 999)
         self.stage_list = []
@@ -183,8 +183,6 @@ class makePath:
         return final_path
 
         
-
-
 
 def main():
     """Main"""

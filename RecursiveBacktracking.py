@@ -91,13 +91,12 @@ class Solve:
                 self.push((direction, self.current))
                 self.current = self.moveInDir(self.current, direction)
             else: 
-                print("We need to backtrack")
                 # Need to backtrack!
                 if len(self.history): 
                     last_direction, last_co = self.pop()
                     bad_move = self.moveInDir(last_co, last_direction)
                     # block off the bad move
-                    print("Blocking off + removing from path: ", end='')
+                    print("Backtracking, removing: ", end='')
                     bad_move.p()
                     self.mz.maze[bad_move.r][bad_move.c] = 2
                     self.on_path.remove((bad_move.r, bad_move.c))

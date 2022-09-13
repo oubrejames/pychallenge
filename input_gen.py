@@ -49,5 +49,10 @@ ends = [end1,end2, end3, end4, end5, end6, end7, end8]
 def give_rand_maze():
     """Provide a random maze from the selction of predefined mazes"""
     num = random.randint(0,7)
+    print('Set: ', num)
     return mazes[num], starts[num], ends[num]
 
+tmaze, tstart, tend = give_rand_maze()
+print(tmaze)
+print(tstart)
+print(tend)

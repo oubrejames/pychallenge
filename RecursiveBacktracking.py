@@ -21,43 +21,44 @@ def convert(dir):
 
 
 class Solve: 
-    def __init__(self, m, n):
-        self.mz = Generate(m, n)
-        self.mz.load()
-        self.mz.change_end(1,2)
+    def __init__(self, mz):
+        self.mz = mz
         self.history = []
+        self.on_path = []
         self.current = self.mz.start
     
     def chooseDirection(self, co): 
-        print(self.mz.maze)
-        if co.c > 0: 
-            if self.mz.maze[co.r][co.c-1] == 0:
+        if co.r > 0: 
+            if (self.mz.maze[co.r-1][co.c] == 0) and (co.r-1, co.c) not in self.on_path:
                 print("Allowed North")
                 return 1
-        if co.r < self.mz.n -1: 
-            if self.mz.maze[co.r+1][co.c] == 0:
+        if co.c < self.mz.n - 1: 
+            if (self.mz.maze[co.r][co.c+1] == 0) and (co.r, co.c+1) not in self.on_path:
                 print("Allowed East")
                 return 2
-        if co.c < self.mz.m - 1:
-            if self.mz.maze[co.r][co.c+1] == 0:
+        if co.r < self.mz.m - 1:
+            if (self.mz.maze[co.r+1][co.c] == 0) and (co.r+1, co.c) not in self.on_path:
                 print("Allowed South")
                 return 3
-        if co.r > 0: 
-            if self.mz.maze[co.r-1][co.c]: 
+        if co.c > 0: 
+            if (self.mz.maze[co.r][co.c-1] == 0) and (co.r, co.c-1) not in self.on_path: 
                 print("Allowed West")
                 return 4
-        else:
-            return 0
+        return 0
     
     def moveInDir(self, co, dir):
         if dir == 1: 
-            return Coord(co.r, co.c-1)
-        elif dir == 2: 
-            return Coord(co.r+1, co.c)
-        elif dir == 3: 
-            return Coord(co.r, co.c+1)
-        elif dir == 4: 
+            # NORTH
             return Coord(co.r-1, co.c)
+        elif dir == 2: 
+            # EAST
+            return Coord(co.r, co.c+1)
+        elif dir == 3: 
+            # SOUTH
+            return Coord(co.r+1, co.c)
+        elif dir == 4: 
+            # WEST
+            return Coord(co.r, co.c-1)
         else: 
             return Coord(-1, -1)
 
@@ -72,51 +73,46 @@ class Solve:
     
     
     def go(self): 
-        ct = 0
         while not ((self.current.r == self.mz.end.r) and (self.current.c == self.mz.end.c)): 
-            ct += 1
-            if ct > 50: 
-                exit()
-            print("Current Location:", end='')
+            print("Current Location: ", end='')
             self.current.p()
-            print("End Location:", end='')
-            self.mz.end.p()
             if self.current.r == -1 or self.current.c == -1: 
                 print("SOMETHING WENT WRONG!!!")
                 exit()
+            current_tuple = (self.current.r, self.current.c)
+            if current_tuple not in self.on_path:
+                self.on_path.append(current_tuple)
             direction = self.chooseDirection(self.current)
-            print("Direction:")
-            convert(direction)
             if direction is None: 
-                print("Why have u forsaken me")
+                print("why are u doing this the direction should never be none")
                 exit()
             elif direction!=0: 
-                print("We can proceed!")
                 # we can proceed in some direction
                 self.push((direction, self.current))
                 self.current = self.moveInDir(self.current, direction)
             else: 
-                print("We need to backtrack")
                 # Need to backtrack!
                 if len(self.history): 
                     last_direction, last_co = self.pop()
                     bad_move = self.moveInDir(last_co, last_direction)
                     # block off the bad move
-                    print("Blocking off: ", end='')
+                    print("Backtracking, removing: ", end='')
                     bad_move.p()
                     self.mz.maze[bad_move.r][bad_move.c] = 2
+                    self.on_path.remove((bad_move.r, bad_move.c))
                     self.current = last_co
                 else: 
                     print("IDK what happened but we can't solve")
                     exit()
-        print("SOLVED:D")
+        print()
+        print("SOLVED :D")
+        print("Start: ", end='')
+        self.mz.start.p()
+        print("End: ", end='')
+        self.mz.end.p()
+        print("Path:", end='')
+        self.on_path.append((self.mz.end.r, self.mz.end.c))
+        print(self.on_path)
+        self.mz.maze[self.mz.maze == 2] = 0
+        return self.on_path
 
-
-
-        
-
-
-
-
-s = Solve(10, 10)
-s.go()

@@ -17,7 +17,9 @@ class makePath:
         self.maze.end.p()
         
         self.path_map[self.maze.start.r][self.maze.start.c] = 0
-        self.path_map[self.maze.end.r][self.maze.end.c] = 222
+        #self.path_map[self.maze.end.r][self.maze.end.c] = 222
+
+        
 
         self.loop_squares()
         print(self.path_map)
@@ -27,8 +29,9 @@ class makePath:
     def check_surround(self, point):
         # Check bottom
         # If point is not on bottom
-        self.stage_list.clear()
+        # self.stage_list.clear()
         if point.r < self.maze.m-1:
+            print("Checking below")
             below_contents = self.maze.maze[point.r+1][point.c]
             
             if below_contents == 1: # Is there obstacle
@@ -37,9 +40,13 @@ class makePath:
                 self.path_map[point.r+1][point.c] = self.cnt
                 self.stage_list.append(Coord(point.r+1,point.c))
                 print("Added ", self.cnt, " to stage list for below")
+                print(self.path_map)
+                #print("Maze: \n", self.maze.maze)
 
         # Check above
-        if point.r < 0:
+        if point.r > 0:
+            print("Checking above")
+
             above_contents = self.maze.maze[point.r-1][point.c]
             
             if above_contents == 1: # Is there obstacle
@@ -48,9 +55,13 @@ class makePath:
                 self.path_map[point.r-1][point.c] = self.cnt
                 self.stage_list.append(Coord(point.r-1,point.c))
                 print("Added ", self.cnt, " to stage list for above")
+                print(self.path_map)
+                #print("Maze: \n", self.maze.maze)
 
         # Check Right
         if point.c < self.maze.n-1:
+            print("Checking right")
+
             right_contents = self.maze.maze[point.r][point.c+1]
             if right_contents == 1: # Is there obstacle
                 pass
@@ -58,21 +69,34 @@ class makePath:
                 self.path_map[point.r][point.c+1] = self.cnt
                 self.stage_list.append(Coord(point.r,point.c+1))
                 print("Added ", self.cnt, " to stage list for right")
+                print(self.path_map)
+                #print("Maze: \n", self.maze.maze)
 
         # Check left
-        if point.c < 0:
+        if point.c > 0:
+            print("Checking left")
             left_contents = self.maze.maze[[point.r],[point.c-1]]
+            print("Left contents: ", left_contents)
+            print("Path map contents", self.path_map[point.r][point.c-1])
             if left_contents == 1: # Is there obstacle
                 pass
             if left_contents == 0 and self.path_map[point.r][point.c-1] == 999: # If free, add label
                 self.path_map[point.r][point.c-1] = self.cnt
                 self.stage_list.append(Coord(point.r,point.c-1))
                 print("Added ", self.cnt, " to stage list for left")
+                print(self.path_map)
+                #print("Maze: \n", self.maze.maze)
+        
+        
+
 
     def are_we_there_yet(self, point):
         flag = True
+        print("point.r end: ", point.r, ' point.c end: ', point.c)
+        print("self.maze.end.r: ", self.maze.end.r, ' self.maze.end.c ', self.maze.end.c)
         if point.r == self.maze.end.r and point.c == self.maze.end.c:
             flag =  True
+            print("GOT IT BABYYYY")
         else: 
             flag = False
         return flag
@@ -80,21 +104,29 @@ class makePath:
     def loop_squares(self):
     
         self.check_surround(self.maze.start)
-
-        print("FHFJHFHFHF")
         print_coord_list(self.stage_list)
         flag = False
-
+        self.cnt += 1
+        print("Moving past start")
         while not flag:
-            tmp_stage = self.stage_list
+            tmp_stage = np.array(self.stage_list)
+            self.stage_list.clear()
+            # print("tmp_stage: ", tmp_stage[1].p())
+            # print_coord_list(tmp_stage)
             for i in tmp_stage:
                 self.check_surround(i)
                 flag = self.are_we_there_yet(i)
                 print("TEST")
                 #i.p()
-            #print('count ', self.cnt)
+            
+            print("New Stage")
+            print('count ', self.cnt)
             self.cnt += 1
-
+            
+            # test statement DELETE LATER
+            if self.cnt > 20:
+                flag = True
+                print("Maze: \n", self.maze.maze)
     
 
 

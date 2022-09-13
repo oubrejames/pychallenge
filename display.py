@@ -64,6 +64,11 @@ game_map = [list(map(str,x)) for x in game_map]
 # test = [[x + 1 for x in y] for y in test]
 # print(test)
 
+
+""" Function - MoveRobot(PathCoords)
+    This function updates the game_map to add the little
+    robot onto the display screen
+"""
 def MoveRobot(PathCoords):
     x = PathCoords[0] # Get X and Y of Path
     y = PathCoords[1]
@@ -73,6 +78,10 @@ def MoveRobot(PathCoords):
 # Booleans
 running = True
 
+""" Function - run(loop_num)
+    Run's the display, which creates the tile map using game_map
+    and also moves the robot from the start to the finish flag
+"""
 def run(loop_num):
     item = 0
     loop_num = 1

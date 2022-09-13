@@ -9,7 +9,7 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Images
-tile_img = pygame.image.load("images/tile.png")
+tile_img = pygame.image.load("images/tile2.png")
 start_img = pygame.image.load("images/start.png")
 finish_img = pygame.image.load("images/finish.png")
 robot_img = pygame.image.load("images/robot.png")

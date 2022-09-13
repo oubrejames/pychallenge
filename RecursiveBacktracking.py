@@ -24,26 +24,29 @@ class Solve:
     def __init__(self, m, n):
         self.mz = Generate(m, n)
         self.mz.load()
-        self.mz.change_end(1,2)
         self.history = []
         self.current = self.mz.start
     
     def chooseDirection(self, co): 
         print(self.mz.maze)
-        if co.c > 0: 
-            if self.mz.maze[co.r][co.c-1] == 0:
+        if co.r > 0: 
+            print("case north?")
+            if self.mz.maze[co.r-1][co.c] == 0:
                 print("Allowed North")
                 return 1
-        if co.r < self.mz.n -1: 
-            if self.mz.maze[co.r+1][co.c] == 0:
+        if co.c < self.mz.n - 1: 
+            print("case east?")
+            if self.mz.maze[co.r][co.c+1] == 0:
                 print("Allowed East")
                 return 2
-        if co.c < self.mz.m - 1:
-            if self.mz.maze[co.r][co.c+1] == 0:
+        if co.r < self.mz.m - 1:
+            print("case south?")
+            if self.mz.maze[co.r+1][co.c] == 0:
                 print("Allowed South")
                 return 3
-        if co.r > 0: 
-            if self.mz.maze[co.r-1][co.c]: 
+        if co.c > 0: 
+            print("case west?")
+            if self.mz.maze[co.r][co.c-1] == 0: 
                 print("Allowed West")
                 return 4
         else:
@@ -51,13 +54,17 @@ class Solve:
     
     def moveInDir(self, co, dir):
         if dir == 1: 
-            return Coord(co.r, co.c-1)
-        elif dir == 2: 
-            return Coord(co.r+1, co.c)
-        elif dir == 3: 
-            return Coord(co.r, co.c+1)
-        elif dir == 4: 
+            # NORTH
             return Coord(co.r-1, co.c)
+        elif dir == 2: 
+            # EAST
+            return Coord(co.r, co.c+1)
+        elif dir == 3: 
+            # SOUTH
+            return Coord(co.r+1, co.c)
+        elif dir == 4: 
+            # WEST
+            return Coord(co.r, co.c-1)
         else: 
             return Coord(-1, -1)
 
@@ -72,11 +79,7 @@ class Solve:
     
     
     def go(self): 
-        ct = 0
         while not ((self.current.r == self.mz.end.r) and (self.current.c == self.mz.end.c)): 
-            ct += 1
-            if ct > 50: 
-                exit()
             print("Current Location:", end='')
             self.current.p()
             print("End Location:", end='')
@@ -88,15 +91,19 @@ class Solve:
             print("Direction:")
             convert(direction)
             if direction is None: 
-                print("Why have u forsaken me")
+                print("why are u doing this the direction should never be none")
                 exit()
             elif direction!=0: 
                 print("We can proceed!")
                 # we can proceed in some direction
                 self.push((direction, self.current))
+                self.mz.maze[self.current.r][self.current.c] = 9
                 self.current = self.moveInDir(self.current, direction)
+                print("New current direction:")
+                self.current.p()
             else: 
                 print("We need to backtrack")
+                exit()
                 # Need to backtrack!
                 if len(self.history): 
                     last_direction, last_co = self.pop()
@@ -110,6 +117,16 @@ class Solve:
                     print("IDK what happened but we can't solve")
                     exit()
         print("SOLVED:D")
+        print("Start:")
+        self.mz.start.p()
+        print("End:")
+        self.mz.end.p()
+        print("Path:")
+
+        for i in self.history:
+            convert(i[0])
+            i[1].p()
+            print()
 
 
 

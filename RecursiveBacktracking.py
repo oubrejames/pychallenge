@@ -25,32 +25,32 @@ class Solve:
         self.mz = Generate(m, n)
         self.mz.load()
         self.history = []
+        self.on_path = []
         self.current = self.mz.start
     
     def chooseDirection(self, co): 
         print(self.mz.maze)
         if co.r > 0: 
             print("case north?")
-            if self.mz.maze[co.r-1][co.c] == 0:
+            if (self.mz.maze[co.r-1][co.c] == 0) and (co.r-1, co.c) not in self.on_path:
                 print("Allowed North")
                 return 1
         if co.c < self.mz.n - 1: 
             print("case east?")
-            if self.mz.maze[co.r][co.c+1] == 0:
+            if (self.mz.maze[co.r][co.c+1] == 0) and (co.r, co.c+1) not in self.on_path:
                 print("Allowed East")
                 return 2
         if co.r < self.mz.m - 1:
             print("case south?")
-            if self.mz.maze[co.r+1][co.c] == 0:
+            if (self.mz.maze[co.r+1][co.c] == 0) and (co.r+1, co.c) not in self.on_path:
                 print("Allowed South")
                 return 3
         if co.c > 0: 
             print("case west?")
-            if self.mz.maze[co.r][co.c-1] == 0: 
+            if (self.mz.maze[co.r][co.c-1] == 0) and (co.r, co.c-1) not in self.on_path: 
                 print("Allowed West")
                 return 4
-        else:
-            return 0
+        return 0
     
     def moveInDir(self, co, dir):
         if dir == 1: 
@@ -97,7 +97,9 @@ class Solve:
                 print("We can proceed!")
                 # we can proceed in some direction
                 self.push((direction, self.current))
-                self.mz.maze[self.current.r][self.current.c] = 9
+                self.on_path.append((self.current.r, self.current.c))
+                print("ON PATH")
+                print(self.on_path)
                 self.current = self.moveInDir(self.current, direction)
                 print("New current direction:")
                 self.current.p()
@@ -112,6 +114,11 @@ class Solve:
                     print("Blocking off: ", end='')
                     bad_move.p()
                     self.mz.maze[bad_move.r][bad_move.c] = 2
+                    print("ON PATH before")
+                    print(self.on_path)
+                    self.on_path.remove((bad_move.r, bad_move.c))
+                    print("ON PATH after")
+                    print(self.on_path)
                     self.current = last_co
                 else: 
                     print("IDK what happened but we can't solve")

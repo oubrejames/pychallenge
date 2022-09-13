@@ -91,15 +91,14 @@ class makePath:
 
 
     def are_we_there_yet(self, point):
-        flag = True
-        print("point.r end: ", point.r, ' point.c end: ', point.c)
-        print("self.maze.end.r: ", self.maze.end.r, ' self.maze.end.c ', self.maze.end.c)
+        # print("point.r end: ", point.r, ' point.c end: ', point.c)
+        # print("self.maze.end.r: ", self.maze.end.r, ' self.maze.end.c ', self.maze.end.c)
         if point.r == self.maze.end.r and point.c == self.maze.end.c:
-            flag =  True
-            print("GOT IT BABYYYY")
+            flag1 =  True
+            print("GOT IT BABYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYyY")
         else: 
-            flag = False
-        return flag
+            flag1 = False
+        return flag1
     
     def loop_squares(self):
     
@@ -109,13 +108,17 @@ class makePath:
         self.cnt += 1
         print("Moving past start")
         while not flag:
+            print("Flag: ", flag)
             tmp_stage = np.array(self.stage_list)
             self.stage_list.clear()
             # print("tmp_stage: ", tmp_stage[1].p())
             # print_coord_list(tmp_stage)
             for i in tmp_stage:
-                self.check_surround(i)
                 flag = self.are_we_there_yet(i)
+                if flag == True:
+                    break
+                self.check_surround(i)
+                # print("Flag: ", flag)
                 print("TEST")
                 #i.p()
             
@@ -123,11 +126,7 @@ class makePath:
             print('count ', self.cnt)
             self.cnt += 1
             
-            # test statement DELETE LATER
-            if self.cnt > 20:
-                flag = True
-                print("Maze: \n", self.maze.maze)
-    
+    # TODO Create a function to trace back from end point and create path
 
 
 
